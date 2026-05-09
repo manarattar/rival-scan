@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: rival-scan-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        value: https://api.cerebras.ai/v1
+      - key: MODEL_NAME
+        value: llama-3.3-70b
+      - key: MOCK_MODE
+        value: false
+    disk:
+      name: rival-scan-data
+      mountPath: /app/data
+      sizeGB: 1
+
+  - type: web
+    name: rival-scan-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
