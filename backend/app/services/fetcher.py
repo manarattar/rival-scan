@@ -1,14 +1,35 @@
+import ipaddress
+import logging
 import re
 from datetime import datetime
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 import feedparser
 import requests
 from bs4 import BeautifulSoup
 
+logger = logging.getLogger(__name__)
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; RivalScan/1.0; +https://rivalscan.app)"
 }
+
+
+def _safe_url(url: str) -> str:
+    """Raise ValueError if url points to a non-public or non-http(s) address."""
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Disallowed URL scheme: {parsed.scheme}")
+    host = parsed.hostname or ""
+    try:
+        addr = ipaddress.ip_address(host)
+        if addr.is_private or addr.is_loopback or addr.is_link_local:
+            raise ValueError(f"Blocked private/internal address: {host}")
+    except ValueError as e:
+        if "does not appear to be" not in str(e):
+            raise
+    return url
 
 
 def fetch_updates(competitor) -> List[Dict]:
@@ -41,6 +62,7 @@ def fetch_updates(competitor) -> List[Dict]:
 
 def _fetch_rss(url: str) -> List[Dict]:
     try:
+        _safe_url(url)
         feed = feedparser.parse(url)
         if not feed.entries:
             return []
@@ -73,7 +95,7 @@ def _fetch_rss(url: str) -> List[Dict]:
             )
         return updates
     except Exception as e:
-        print(f"RSS fetch error for {url}: {e}")
+        logger.warning("RSS fetch error for %s: %s", url, e)
         return []
 
 
@@ -95,7 +117,9 @@ def _detect_rss(website_url: str) -> Optional[str]:
     ]
     for path in common_paths:
         try:
-            r = requests.head(f"{base}{path}", timeout=5, allow_redirects=True)
+            candidate = f"{base}{path}"
+            _safe_url(candidate)
+            r = requests.head(candidate, timeout=5, allow_redirects=True)
             ct = r.headers.get("content-type", "")
             if r.status_code == 200 and any(x in ct for x in ["xml", "rss", "atom"]):
                 return f"{base}{path}"
@@ -104,6 +128,7 @@ def _detect_rss(website_url: str) -> Optional[str]:
 
     # Check homepage for <link rel="alternate"> feed
     try:
+        _safe_url(website_url)
         r = requests.get(website_url, timeout=8, headers=HEADERS)
         soup = BeautifulSoup(r.text, "html.parser")
         link = soup.find("link", {"type": re.compile(r"application/(rss|atom)\+xml")})
@@ -118,6 +143,8 @@ def _detect_rss(website_url: str) -> Optional[str]:
 
 def _fetch_github_releases(repo: str) -> List[Dict]:
     try:
+        if not re.match(r"^[\w.\-]+/[\w.\-]+$", repo):
+            return []
         url = f"https://api.github.com/repos/{repo}/releases"
         r = requests.get(
             url,
@@ -154,12 +181,13 @@ def _fetch_github_releases(repo: str) -> List[Dict]:
             )
         return updates
     except Exception as e:
-        print(f"GitHub fetch error for {repo}: {e}")
+        logger.warning("GitHub fetch error for %s: %s", repo, e)
         return []
 
 
 def _scrape_changelog(url: str) -> List[Dict]:
     try:
+        _safe_url(url)
         r = requests.get(url, timeout=10, headers=HEADERS)
         soup = BeautifulSoup(r.text, "html.parser")
         for tag in soup(["nav", "footer", "script", "style", "header", "aside"]):
@@ -191,5 +219,5 @@ def _scrape_changelog(url: str) -> List[Dict]:
             )
         return updates[:8]
     except Exception as e:
-        print(f"Scrape error for {url}: {e}")
+        logger.warning("Scrape error for %s: %s", url, e)
         return []

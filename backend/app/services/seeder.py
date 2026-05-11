@@ -1,5 +1,4 @@
-import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
 
@@ -181,10 +180,10 @@ DEMO_UPDATES = [
 
 
 def seed_demo_data(db: Session) -> None:
-    if db.query(Competitor).filter(Competitor.is_demo == True).count() > 0:
+    if db.query(Competitor).filter(Competitor.is_demo.is_(True)).count() > 0:
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     competitors = []
     for c in DEMO_COMPETITORS:
         comp = Competitor(

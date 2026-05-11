@@ -1,6 +1,4 @@
-from typing import List, Optional
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -13,6 +11,7 @@ router = APIRouter(prefix="/analysis", tags=["analysis"])
 
 @router.post("/gaps", response_model=GapAnalysisResponse)
 def gap_analysis(body: GapAnalysisRequest, db: Session = Depends(get_db)):
+    """Run LLM-powered gap analysis against recent competitor updates for the given product."""
     q = db.query(Update)
     if body.competitor_ids:
         q = q.filter(Update.competitor_id.in_(body.competitor_ids))

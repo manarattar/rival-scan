@@ -3,15 +3,17 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .config import get_settings
 from .database import Base, SessionLocal, engine
 from .routers import analysis, competitors, updates
 from .services.seeder import seed_demo_data
 
 app = FastAPI(title="RivalScan API", version="1.0.0")
 
+_settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:4173", "*"],
+    allow_origins=_settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

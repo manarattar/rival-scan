@@ -1,4 +1,6 @@
-from typing import List, Optional
+import logging
+from datetime import datetime, timezone
+from typing import List
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -8,6 +10,8 @@ from ..models import Competitor, Update
 from ..schemas import CompetitorCreate, CompetitorResponse
 from ..services.ai_analyzer import analyze_update
 from ..services.fetcher import fetch_updates
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/competitors", tags=["competitors"])
 
@@ -21,6 +25,7 @@ def _enrich(competitor: Competitor, db: Session) -> CompetitorResponse:
 
 @router.get("", response_model=List[CompetitorResponse])
 def list_competitors(db: Session = Depends(get_db)):
+    """Return all tracked competitors ordered by creation date, newest first."""
     competitors = db.query(Competitor).order_by(Competitor.created_at.desc()).all()
     return [_enrich(c, db) for c in competitors]
 
@@ -31,6 +36,7 @@ def create_competitor(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
+    """Create a new competitor and kick off a background fetch of its updates."""
     competitor = Competitor(**body.model_dump())
     db.add(competitor)
     db.commit()
@@ -41,6 +47,7 @@ def create_competitor(
 
 @router.delete("/{competitor_id}", status_code=204)
 def delete_competitor(competitor_id: int, db: Session = Depends(get_db)):
+    """Delete a competitor and all its associated updates; 404 if not found."""
     competitor = db.query(Competitor).filter(Competitor.id == competitor_id).first()
     if not competitor:
         raise HTTPException(status_code=404, detail="Competitor not found")
@@ -54,6 +61,7 @@ def refresh_competitor(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
+    """Trigger a background re-fetch for an existing competitor; 404 if not found."""
     competitor = db.query(Competitor).filter(Competitor.id == competitor_id).first()
     if not competitor:
         raise HTTPException(status_code=404, detail="Competitor not found")
@@ -65,8 +73,6 @@ def refresh_competitor(
 
 
 def _fetch_and_store(competitor_id: int):
-    from datetime import datetime
-
     from ..database import SessionLocal
 
     db = SessionLocal()
@@ -106,10 +112,10 @@ def _fetch_and_store(competitor_id: int):
             new_count += 1
 
         competitor.fetch_status = "ok"
-        competitor.last_fetched_at = datetime.utcnow()
+        competitor.last_fetched_at = datetime.now(timezone.utc).replace(tzinfo=None)
         db.commit()
     except Exception as e:
-        print(f"Fetch/store error for competitor {competitor_id}: {e}")
+        logger.error("Fetch/store error for competitor %s: %s", competitor_id, e)
         try:
             competitor = (
                 db.query(Competitor).filter(Competitor.id == competitor_id).first()

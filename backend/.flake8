@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 100
+per-file-ignores =
+    # LLM prompt strings and mock data legitimately exceed 100 chars
+    *ai_analyzer.py: E501
+    *fetcher.py: E501

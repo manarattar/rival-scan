@@ -28,6 +28,7 @@ def list_updates(
     limit: int = Query(50, le=200),
     db: Session = Depends(get_db),
 ):
+    """List updates with optional filters for competitor, category, and impact."""
     q = db.query(Update)
     if competitor_id is not None:
         q = q.filter(Update.competitor_id == competitor_id)

@@ -1,11 +1,14 @@
 import json
+import logging
 import re
 import time
-from typing import Dict, Optional
+from typing import Dict
 
 from openai import OpenAI
 
 from ..config import get_settings
+
+logger = logging.getLogger(__name__)
 
 MOCK_SUMMARIES = [
     {
@@ -112,11 +115,12 @@ def _call_llm(prompt: str, mock_response: Dict) -> Dict:
         raw = re.sub(r"\s*```$", "", raw)
         return json.loads(raw)
     except Exception as e:
-        print(f"LLM error: {e}")
+        logger.warning("LLM error: %s", e)
         return mock_response
 
 
 def analyze_update(title: str, content: str, index: int = 0) -> Dict:
+    """Classify and summarise a competitor update, sanitising category and impact to whitelists."""
     mock = MOCK_SUMMARIES[index % len(MOCK_SUMMARIES)]
     prompt = ANALYZE_PROMPT.format(
         title=title[:200],
@@ -144,6 +148,7 @@ def analyze_update(title: str, content: str, index: int = 0) -> Dict:
 
 
 def run_gap_analysis(your_product: str, updates: list) -> Dict:
+    """Identify competitive gaps by comparing recent competitor updates against the given product description."""
     mock_gap = {
         "gaps": [
             {
