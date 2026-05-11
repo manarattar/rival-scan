@@ -12,3 +12,5 @@ export const refreshCompetitor = (id) => api.post(`/competitors/${id}/refresh`);
 export const getUpdates = (params) => api.get("/updates", { params });
 
 export const runGapAnalysis = (data) => api.post("/analysis/gaps", data);
+
+export const getHealth = () => api.get("/health");

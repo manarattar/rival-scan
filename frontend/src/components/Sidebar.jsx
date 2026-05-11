@@ -93,10 +93,17 @@ export default function Sidebar({
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-slate-200 truncate">{c.name}</span>
                 <span
-                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${STATUS_COLOR[c.fetch_status] || "bg-slate-500"}`}
+                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                    c.fetch_status === "ok" && !c.update_count
+                      ? "bg-amber-500"
+                      : STATUS_COLOR[c.fetch_status] || "bg-slate-500"
+                  }`}
+                  title={c.fetch_status === "ok" && !c.update_count ? "No feed found" : c.fetch_status}
                 />
               </div>
-              <div className="text-xs text-slate-500">{c.update_count || 0} updates</div>
+              <div className="text-xs text-slate-500">
+                {c.update_count ? `${c.update_count} updates` : "no feed found"}
+              </div>
             </div>
 
             {/* Action buttons on hover */}

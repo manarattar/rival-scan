@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCompetitors, getUpdates } from "./api";
+import { getCompetitors, getUpdates, getHealth } from "./api";
 import Sidebar from "./components/Sidebar";
 import UpdatesFeed from "./components/UpdatesFeed";
 import GapAnalysis from "./components/GapAnalysis";
@@ -31,6 +31,12 @@ export default function App() {
 
   useEffect(() => {
     fetchAll();
+  }, []);
+
+  // Keep Render free tier alive during a session (spins down after 15 min idle)
+  useEffect(() => {
+    const id = setInterval(() => { getHealth().catch(() => {}); }, 14 * 60 * 1000);
+    return () => clearInterval(id);
   }, []);
 
   const fetchUpdates = async (competitorId) => {

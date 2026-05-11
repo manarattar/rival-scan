@@ -102,6 +102,10 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
   const [categoryFilter, setCategoryFilter] = useState("");
   const [impactFilter, setImpactFilter] = useState("");
 
+  const currentComp = selectedCompetitor
+    ? competitors.find((c) => c.id === selectedCompetitor)
+    : null;
+
   const filtered = updates.filter((u) => {
     if (categoryFilter && u.category !== categoryFilter) return false;
     if (impactFilter && u.impact !== impactFilter) return false;
@@ -168,8 +172,21 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
       {/* Feed */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-4xl mb-3">📭</p>
-          <p className="text-slate-400">No updates match your filters</p>
+          <p className="text-4xl mb-3">
+            {categoryFilter || impactFilter ? "🔎" : currentComp?.update_count === 0 ? "📡" : "📭"}
+          </p>
+          {categoryFilter || impactFilter ? (
+            <p className="text-slate-400">No updates match your filters</p>
+          ) : currentComp?.update_count === 0 ? (
+            <>
+              <p className="text-slate-300 font-medium mb-1">No updates found for {currentComp.name}</p>
+              <p className="text-slate-500 text-sm max-w-xs mx-auto">
+                Try adding an RSS feed URL, GitHub repo, or changelog URL for this competitor, then hit Refresh.
+              </p>
+            </>
+          ) : (
+            <p className="text-slate-400">No updates yet — click Refresh on a competitor to fetch.</p>
+          )}
         </div>
       ) : (
         <div className="space-y-3">
