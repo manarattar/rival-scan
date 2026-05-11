@@ -20,8 +20,8 @@ export default function App() {
         getCompetitors(),
         getUpdates({ limit: 50 }),
       ]);
-      setCompetitors(compRes.data);
-      setUpdates(updRes.data);
+      setCompetitors(Array.isArray(compRes.data) ? compRes.data : []);
+      setUpdates(Array.isArray(updRes.data) ? updRes.data : []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -38,7 +38,7 @@ export default function App() {
       competitor_id: competitorId || undefined,
       limit: 50,
     });
-    setUpdates(res.data);
+    setUpdates(Array.isArray(res.data) ? res.data : []);
   };
 
   const handleSelectCompetitor = (id) => {
