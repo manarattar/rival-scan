@@ -59,6 +59,20 @@ def delete_competitor(competitor_id: int, db: Session = Depends(get_db)):
     db.commit()
 
 
+@router.post("/refresh-all")
+def refresh_all_competitors(
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    """Trigger a background re-fetch for every competitor. Used by the scheduled cron job."""
+    competitors = db.query(Competitor).all()
+    for competitor in competitors:
+        competitor.fetch_status = "fetching"
+        background_tasks.add_task(_fetch_and_store, competitor.id)
+    db.commit()
+    return {"queued": len(competitors)}
+
+
 @router.post("/{competitor_id}/refresh", response_model=CompetitorResponse)
 def refresh_competitor(
     competitor_id: int,
