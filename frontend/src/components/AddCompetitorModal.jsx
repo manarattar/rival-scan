@@ -3,9 +3,18 @@ import { createCompetitor } from "../api";
 
 const EMOJIS = ["🏢", "🚀", "⚡", "🔥", "🌊", "🎯", "💡", "🤖", "🦄", "🌍", "🛸", "💎"];
 const COLORS = [
-  "#06b6d4", "#0ea5e9", "#6366f1", "#8b5cf6",
-  "#ec4899", "#ef4444", "#f97316", "#eab308",
-  "#22c55e", "#10b981", "#10a37f", "#c17940",
+  // Cyan / Sky / Blue
+  "#06b6d4", "#0ea5e9", "#3b82f6", "#1d4ed8",
+  // Indigo / Violet / Purple
+  "#6366f1", "#8b5cf6", "#a855f7", "#7c3aed",
+  // Pink / Rose / Red
+  "#ec4899", "#f43f5e", "#ef4444", "#dc2626",
+  // Orange / Amber / Yellow
+  "#f97316", "#fb923c", "#eab308", "#f59e0b",
+  // Green / Emerald / Teal
+  "#22c55e", "#10b981", "#14b8a6", "#06b6d4",
+  // Warm neutrals / brand
+  "#10a37f", "#c17940", "#64748b", "#ffffff",
 ];
 
 const SUGGESTED_COMPANIES = [
