@@ -47,10 +47,14 @@ def create_competitor(
 
 @router.delete("/{competitor_id}", status_code=204)
 def delete_competitor(competitor_id: int, db: Session = Depends(get_db)):
-    """Delete a competitor and all its associated updates; 404 if not found."""
+    """Delete a competitor and all its associated updates; 404 if not found, 403 if demo."""
     competitor = db.query(Competitor).filter(Competitor.id == competitor_id).first()
     if not competitor:
         raise HTTPException(status_code=404, detail="Competitor not found")
+    if competitor.is_demo:
+        raise HTTPException(
+            status_code=403, detail="Demo competitors cannot be deleted"
+        )
     db.delete(competitor)
     db.commit()
 
