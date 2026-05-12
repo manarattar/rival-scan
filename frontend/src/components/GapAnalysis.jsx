@@ -8,7 +8,7 @@ const URGENCY_CONFIG = {
 };
 
 const cardStyle = {
-  background: "#0f1620",
+  background: "#101d14",
   border: "1px solid rgba(255,255,255,0.05)",
   borderRadius: "0.75rem",
   padding: "1.25rem",
@@ -16,7 +16,7 @@ const cardStyle = {
 
 const textareaStyle = {
   width: "100%",
-  background: "#0f1620",
+  background: "#101d14",
   border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "0.75rem",
   padding: "0.75rem 1rem",
@@ -60,7 +60,7 @@ export default function GapAnalysis({ competitors }) {
       {/* Title */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <div className="w-1 h-5 rounded-full" style={{ background: "linear-gradient(to bottom, #06b6d4, #0ea5e9)" }} />
+          <div className="w-1 h-5 rounded-full" style={{ background: "linear-gradient(to bottom, #059669, #10b981)" }} />
           <h2 className="text-xl font-bold text-slate-100">Gap Analysis</h2>
         </div>
         <p className="text-sm ml-3" style={{ color: "#64748b" }}>
@@ -78,7 +78,7 @@ export default function GapAnalysis({ competitors }) {
             placeholder="e.g. A developer-first API monitoring tool that tracks latency, errors, and usage patterns in real time with alerting and Slack integration."
             rows={4}
             style={textareaStyle}
-            onFocus={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; }}
+            onFocus={e => { e.currentTarget.style.borderColor = "rgba(5,150,105,0.4)"; }}
             onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
           />
         </div>
@@ -97,7 +97,7 @@ export default function GapAnalysis({ competitors }) {
                 onClick={() => toggleCompetitor(c.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all"
                 style={selectedIds.includes(c.id)
-                  ? { background: "rgba(6,182,212,0.15)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.35)" }
+                  ? { background: "rgba(5,150,105,0.15)", color: "#34d399", border: "1px solid rgba(5,150,105,0.35)" }
                   : { background: "rgba(255,255,255,0.04)", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.08)" }
                 }
               >
@@ -118,13 +118,13 @@ export default function GapAnalysis({ competitors }) {
           type="submit"
           disabled={loading}
           className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium text-sm transition-all disabled:opacity-50"
-          style={{ background: "rgba(6,182,212,0.15)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }}
-          onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(6,182,212,0.25)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(6,182,212,0.15)"; }}
+          style={{ background: "rgba(5,150,105,0.15)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }}
+          onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(5,150,105,0.25)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(5,150,105,0.15)"; }}
         >
           {loading ? (
             <>
-              <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#67e8f9" }} />
+              <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#34d399" }} />
               Scanning...
             </>
           ) : (
@@ -142,7 +142,7 @@ export default function GapAnalysis({ competitors }) {
         <div className="space-y-5">
           {/* Summary */}
           <div style={cardStyle}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#06b6d4" }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#059669" }}>
               Strategic Overview
             </p>
             <p className="text-sm leading-relaxed text-slate-300">{result.summary}</p>

@@ -4,7 +4,7 @@ import { createCompetitor } from "../api";
 const EMOJIS = ["🏢", "🚀", "⚡", "🔥", "🌊", "🎯", "💡", "🤖", "🦄", "🌍", "🛸", "💎"];
 const COLORS = [
   // Cyan / Sky / Blue
-  "#06b6d4", "#0ea5e9", "#3b82f6", "#1d4ed8",
+  "#059669", "#10b981", "#3b82f6", "#1d4ed8",
   // Indigo / Violet / Purple
   "#6366f1", "#8b5cf6", "#a855f7", "#7c3aed",
   // Pink / Rose / Red
@@ -12,7 +12,7 @@ const COLORS = [
   // Orange / Amber / Yellow
   "#f97316", "#fb923c", "#eab308", "#f59e0b",
   // Green / Emerald / Teal
-  "#22c55e", "#10b981", "#14b8a6", "#0d9488",
+  "#22c55e", "#16a34a", "#14b8a6", "#0d9488",
   // Warm neutrals / brand
   "#10a37f", "#c17940", "#64748b", "#ffffff",
 ];
@@ -33,7 +33,7 @@ const SUGGESTED_COMPANIES = [
     items: [
       { name: "Groq", website_url: "https://groq.com", changelog_url: null, rss_url: null, github_repo: "groq/groq-python", logo_emoji: "⚡", color: "#f43f5e", description: "Ultra-fast LPU inference" },
       { name: "Together AI", website_url: "https://www.together.ai", changelog_url: null, rss_url: null, github_repo: "togethercomputer/together-python", logo_emoji: "🤝", color: "#7c3aed", description: "Open-source model hosting" },
-      { name: "Replicate", website_url: "https://replicate.com", changelog_url: null, rss_url: null, github_repo: "replicate/replicate-python", logo_emoji: "🔁", color: "#0ea5e9", description: "Run ML models via API" },
+      { name: "Replicate", website_url: "https://replicate.com", changelog_url: null, rss_url: null, github_repo: "replicate/replicate-python", logo_emoji: "🔁", color: "#10b981", description: "Run ML models via API" },
       { name: "Hugging Face", website_url: "https://huggingface.co", changelog_url: null, rss_url: "https://huggingface.co/blog/feed.xml", github_repo: "huggingface/transformers", logo_emoji: "🤗", color: "#ffd21e", description: "500k+ open-source models" },
       { name: "Perplexity", website_url: "https://www.perplexity.ai", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🔍", color: "#20b2aa", description: "AI-powered search & answers" },
     ],
@@ -62,7 +62,7 @@ const SUGGESTED_COMPANIES = [
 
 export default function AddCompetitorModal({ onClose, onAdded }) {
   const [mode, setMode] = useState("browse");
-  const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", logo_emoji: "🏢", color: "#06b6d4" });
+  const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", logo_emoji: "🏢", color: "#059669" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -91,7 +91,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
 
   const inputStyle = {
     width: "100%",
-    background: "#07090f",
+    background: "#080f0a",
     border: "1px solid rgba(255,255,255,0.08)",
     borderRadius: "0.5rem",
     padding: "0.5rem 0.75rem",
@@ -102,7 +102,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: "rgba(0,0,0,0.75)" }}>
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "#0b1018", border: "1px solid rgba(6,182,212,0.15)" }}>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "#0c1510", border: "1px solid rgba(5,150,105,0.15)" }}>
         {/* Header */}
         <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="flex items-center gap-3">
@@ -114,7 +114,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                   onClick={() => setMode(m)}
                   className="px-3 py-1 rounded-md text-xs font-medium transition-all"
                   style={mode === m
-                    ? { background: "rgba(6,182,212,0.2)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }
+                    ? { background: "rgba(5,150,105,0.2)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }
                     : { color: "#64748b", border: "1px solid transparent" }
                   }
                 >
@@ -134,7 +134,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
           <div className="p-5 space-y-5">
             {SUGGESTED_COMPANIES.map((group) => (
               <div key={group.category}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#06b6d4" }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#059669" }}>
                   {group.category}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -144,7 +144,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                       onClick={() => prefill(company)}
                       className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
                       style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(6,182,212,0.06)"; e.currentTarget.style.borderColor = "rgba(6,182,212,0.2)"; }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(5,150,105,0.06)"; e.currentTarget.style.borderColor = "rgba(5,150,105,0.2)"; }}
                       onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     >
                       <span className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0" style={{ background: `${company.color}20` }}>
@@ -174,7 +174,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                     <button key={e} type="button" onClick={() => set("logo_emoji", e)}
                       className="w-8 h-8 rounded-lg text-lg flex items-center justify-center transition-all"
                       style={form.logo_emoji === e
-                        ? { background: "rgba(6,182,212,0.2)", outline: "2px solid rgba(6,182,212,0.5)" }
+                        ? { background: "rgba(5,150,105,0.2)", outline: "2px solid rgba(5,150,105,0.5)" }
                         : {}
                       }
                     >
@@ -212,7 +212,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                   onChange={(e) => set(key, e.target.value)}
                   placeholder={placeholder}
                   style={inputStyle}
-                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(5,150,105,0.4)"; }}
                   onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
                 />
               </div>
@@ -233,13 +233,13 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
               </button>
               <button type="submit" disabled={loading}
                 className="flex-1 px-4 py-2.5 rounded-xl font-medium text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ background: "rgba(6,182,212,0.15)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(6,182,212,0.25)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(6,182,212,0.15)"; }}
+                style={{ background: "rgba(5,150,105,0.15)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(5,150,105,0.25)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "rgba(5,150,105,0.15)"; }}
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#67e8f9" }} />
+                    <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#34d399" }} />
                     Adding...
                   </>
                 ) : "Add & Scan"}

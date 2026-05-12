@@ -61,7 +61,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#07090f", color: "#e2e8f0" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#080f0a", color: "#e2e8f0" }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/70 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -82,7 +82,7 @@ export default function App() {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header style={{ background: "#0b1018", borderBottom: "1px solid rgba(6,182,212,0.12)" }} className="flex items-center gap-3 px-4 py-3">
+        <header style={{ background: "#0c1510", borderBottom: "1px solid rgba(5,150,105,0.12)" }} className="flex items-center gap-3 px-4 py-3">
           <button className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5" onClick={() => setSidebarOpen(true)}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -91,8 +91,8 @@ export default function App() {
 
           {/* Brand */}
           <div className="flex items-center gap-2.5">
-            <div style={{ background: "rgba(6,182,212,0.12)", border: "1px solid rgba(6,182,212,0.25)" }} className="w-7 h-7 rounded-lg flex items-center justify-center">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2">
+            <div style={{ background: "rgba(5,150,105,0.12)", border: "1px solid rgba(5,150,105,0.25)" }} className="w-7 h-7 rounded-lg flex items-center justify-center">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <circle cx="12" cy="12" r="4" />
                 <line x1="12" y1="2" x2="12" y2="6" />
@@ -102,7 +102,7 @@ export default function App() {
               </svg>
             </div>
             <div>
-              <span className="text-base font-bold" style={{ background: "linear-gradient(135deg, #67e8f9, #0ea5e9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span className="text-base font-bold" style={{ background: "linear-gradient(135deg, #34d399, #059669)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 RivalScan
               </span>
               <span className="text-xs text-slate-500 ml-2 hidden sm:inline">Competitive Intelligence</span>
@@ -120,7 +120,7 @@ export default function App() {
                 onClick={() => setActiveTab(tab.id)}
                 className="px-3 py-1.5 rounded-md text-sm font-medium transition-all"
                 style={activeTab === tab.id
-                  ? { background: "rgba(6,182,212,0.15)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }
+                  ? { background: "rgba(5,150,105,0.15)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }
                   : { color: "#94a3b8", border: "1px solid transparent" }
                 }
               >
@@ -132,16 +132,16 @@ export default function App() {
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto" style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(6,182,212,0.06) 1px, transparent 0)",
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(5,150,105,0.06) 1px, transparent 0)",
           backgroundSize: "28px 28px",
         }}>
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="relative w-12 h-12 mx-auto mb-4">
-                  <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20" />
-                  <div className="absolute inset-0 rounded-full border-2 border-t-cyan-400 animate-spin" />
-                  <div className="absolute inset-2 rounded-full border border-cyan-500/10" />
+                  <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20" />
+                  <div className="absolute inset-0 rounded-full border-2 border-t-emerald-400 animate-spin" />
+                  <div className="absolute inset-2 rounded-full border border-emerald-500/10" />
                 </div>
                 <p className="text-slate-400 text-sm tracking-wide">Scanning intelligence...</p>
               </div>

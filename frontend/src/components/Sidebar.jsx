@@ -25,11 +25,11 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
   };
 
   return (
-    <aside className="h-full flex flex-col" style={{ background: "#0b1018", borderRight: "1px solid rgba(6,182,212,0.1)" }}>
+    <aside className="h-full flex flex-col" style={{ background: "#0c1510", borderRight: "1px solid rgba(5,150,105,0.1)" }}>
       {/* Header */}
       <div className="p-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#06b6d4" }}>
+          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#059669" }}>
             Competitors
           </span>
           <span className="text-xs text-slate-600 tabular-nums">{competitors.length}</span>
@@ -37,9 +37,9 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
         <button
           onClick={onAdd}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-          style={{ background: "rgba(6,182,212,0.12)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.25)" }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(6,182,212,0.2)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(6,182,212,0.12)"; }}
+          style={{ background: "rgba(5,150,105,0.12)", color: "#34d399", border: "1px solid rgba(5,150,105,0.25)" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(5,150,105,0.2)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(5,150,105,0.12)"; }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -54,7 +54,7 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
           onClick={() => onSelect(null)}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
           style={selected === null
-            ? { background: "rgba(6,182,212,0.1)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.2)" }
+            ? { background: "rgba(5,150,105,0.1)", color: "#34d399", border: "1px solid rgba(5,150,105,0.2)" }
             : { color: "#94a3b8", border: "1px solid transparent" }
           }
         >
@@ -76,7 +76,7 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
             onMouseLeave={() => setHoveredId(null)}
             className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
             style={selected === c.id
-              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(6,182,212,0.2)" }
+              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(5,150,105,0.2)" }
               : { border: "1px solid transparent" }
             }
           >
@@ -104,7 +104,7 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
               <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => handleRefresh(e, c.id)}
-                  className="p-1 rounded transition-colors text-slate-500 hover:text-cyan-400"
+                  className="p-1 rounded transition-colors text-slate-500 hover:text-emerald-400"
                   title="Refresh"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

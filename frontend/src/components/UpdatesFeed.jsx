@@ -5,7 +5,7 @@ const CATEGORY_STYLE = {
   Feature:      { bg: "rgba(14,165,233,0.12)",  text: "#7dd3fc", border: "rgba(14,165,233,0.25)"  },
   Fix:          { bg: "rgba(16,185,129,0.12)",  text: "#6ee7b7", border: "rgba(16,185,129,0.25)"  },
   Pricing:      { bg: "rgba(234,179,8,0.12)",   text: "#fde047", border: "rgba(234,179,8,0.25)"   },
-  Integration:  { bg: "rgba(6,182,212,0.12)",   text: "#67e8f9", border: "rgba(6,182,212,0.25)"   },
+  Integration:  { bg: "rgba(5,150,105,0.12)",   text: "#34d399", border: "rgba(5,150,105,0.25)"   },
   Deprecation:  { bg: "rgba(239,68,68,0.12)",   text: "#fca5a5", border: "rgba(239,68,68,0.25)"   },
   Announcement: { bg: "rgba(168,85,247,0.12)",  text: "#d8b4fe", border: "rgba(168,85,247,0.25)"  },
   Other:        { bg: "rgba(100,116,139,0.12)", text: "#94a3b8", border: "rgba(100,116,139,0.25)" },
@@ -36,18 +36,18 @@ function UpdateCard({ update }) {
       onClick={() => setExpanded(!expanded)}
       className="rounded-xl p-4 cursor-pointer transition-all group"
       style={{
-        background: "#0f1620",
+        background: "#101d14",
         border: `1px solid rgba(255,255,255,0.05)`,
-        borderLeft: `3px solid ${update.competitor_color || "#06b6d4"}`,
+        borderLeft: `3px solid ${update.competitor_color || "#059669"}`,
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(6,182,212,0.25)`; e.currentTarget.style.borderLeftColor = update.competitor_color || "#06b6d4"; e.currentTarget.style.background = "#121c2c"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderLeftColor = update.competitor_color || "#06b6d4"; e.currentTarget.style.background = "#0f1620"; }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(5,150,105,0.25)`; e.currentTarget.style.borderLeftColor = update.competitor_color || "#059669"; e.currentTarget.style.background = "#131f17"; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderLeftColor = update.competitor_color || "#059669"; e.currentTarget.style.background = "#101d14"; }}
     >
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div
           className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-          style={{ background: `${update.competitor_color || "#06b6d4"}18`, border: "1px solid rgba(255,255,255,0.06)" }}
+          style={{ background: `${update.competitor_color || "#059669"}18`, border: "1px solid rgba(255,255,255,0.06)" }}
         >
           {update.competitor_emoji || "🏢"}
         </div>
@@ -94,9 +94,9 @@ function UpdateCard({ update }) {
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="text-xs transition-colors"
-                style={{ color: "#06b6d4" }}
-                onMouseEnter={e => { e.currentTarget.style.color = "#67e8f9"; }}
-                onMouseLeave={e => { e.currentTarget.style.color = "#06b6d4"; }}
+                style={{ color: "#059669" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "#34d399"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "#059669"; }}
               >
                 View source →
               </a>
@@ -129,7 +129,7 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
   ];
 
   const selectStyle = {
-    background: "#0f1620",
+    background: "#101d14",
     border: "1px solid rgba(255,255,255,0.08)",
     color: "#94a3b8",
     borderRadius: "0.5rem",
@@ -146,7 +146,7 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
           <div
             key={s.label}
             className="rounded-xl p-4"
-            style={{ background: "#0f1620", border: "1px solid rgba(255,255,255,0.05)" }}
+            style={{ background: "#101d14", border: "1px solid rgba(255,255,255,0.05)" }}
           >
             <p className="text-2xl font-bold tabular-nums" style={{ color: s.color }}>{s.value}</p>
             <p className="text-xs mt-1" style={{ color: "#334155" }}>{s.label}</p>
