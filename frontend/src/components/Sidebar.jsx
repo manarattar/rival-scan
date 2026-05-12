@@ -2,20 +2,13 @@ import { useState } from "react";
 import { deleteCompetitor, refreshCompetitor } from "../api";
 
 const STATUS_COLOR = {
-  ok: "bg-green-500",
-  fetching: "bg-yellow-400 animate-pulse",
+  ok: "bg-emerald-500",
+  fetching: "bg-cyan-400 animate-pulse",
   error: "bg-red-500",
   pending: "bg-slate-500",
 };
 
-export default function Sidebar({
-  competitors,
-  selected,
-  onSelect,
-  onAdd,
-  onRefresh,
-  onDelete,
-}) {
+export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefresh, onDelete }) {
   const [hoveredId, setHoveredId] = useState(null);
 
   const handleDelete = async (e, id) => {
@@ -32,60 +25,63 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="h-full bg-[#13131a] border-r border-white/5 flex flex-col">
+    <aside className="h-full flex flex-col" style={{ background: "#0b1018", borderRight: "1px solid rgba(6,182,212,0.1)" }}>
       {/* Header */}
-      <div className="p-4 border-b border-white/5">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+      <div className="p-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "#06b6d4" }}>
             Competitors
           </span>
-          <span className="text-xs text-slate-600">{competitors.length}</span>
+          <span className="text-xs text-slate-600 tabular-nums">{competitors.length}</span>
         </div>
         <button
           onClick={onAdd}
-          className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+          style={{ background: "rgba(6,182,212,0.12)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.25)" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(6,182,212,0.2)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(6,182,212,0.12)"; }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Add Competitor
+          Track Competitor
         </button>
       </div>
 
-      {/* All updates option */}
+      {/* All updates */}
       <div className="px-3 pt-3">
         <button
           onClick={() => onSelect(null)}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-            selected === null
-              ? "bg-indigo-600/20 text-indigo-300 border border-indigo-500/30"
-              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-          }`}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
+          style={selected === null
+            ? { background: "rgba(6,182,212,0.1)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.2)" }
+            : { color: "#94a3b8", border: "1px solid transparent" }
+          }
         >
-          <span className="text-base">📊</span>
+          <span className="text-base">📡</span>
           <span className="font-medium">All Updates</span>
         </button>
       </div>
 
-      {/* Competitor list */}
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
+      {/* Divider */}
+      <div className="mx-3 my-2" style={{ height: "1px", background: "rgba(255,255,255,0.04)" }} />
+
+      {/* List */}
+      <div className="flex-1 overflow-y-auto px-3 pb-2 space-y-1">
         {competitors.map((c) => (
           <div
             key={c.id}
             onClick={() => onSelect(c.id)}
             onMouseEnter={() => setHoveredId(c.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
-              selected === c.id
-                ? "bg-white/8 border border-white/10"
-                : "hover:bg-white/5"
-            }`}
+            className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
+            style={selected === c.id
+              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(6,182,212,0.2)" }
+              : { border: "1px solid transparent" }
+            }
           >
-            {/* Color accent */}
-            <div
-              className="w-0.5 absolute left-0 top-2 bottom-2 rounded-full"
-              style={{ backgroundColor: c.color }}
-            />
+            {/* Color stripe */}
+            <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full" style={{ backgroundColor: c.color }} />
 
             <span className="text-xl ml-1">{c.logo_emoji}</span>
 
@@ -94,24 +90,21 @@ export default function Sidebar({
                 <span className="text-sm font-medium text-slate-200 truncate">{c.name}</span>
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    c.fetch_status === "ok" && !c.update_count
-                      ? "bg-amber-500"
-                      : STATUS_COLOR[c.fetch_status] || "bg-slate-500"
+                    c.fetch_status === "ok" && !c.update_count ? "bg-amber-500" : STATUS_COLOR[c.fetch_status] || "bg-slate-500"
                   }`}
-                  title={c.fetch_status === "ok" && !c.update_count ? "No feed found" : c.fetch_status}
+                  title={c.fetch_status}
                 />
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs" style={{ color: "#475569" }}>
                 {c.update_count ? `${c.update_count} updates` : "no feed found"}
               </div>
             </div>
 
-            {/* Action buttons on hover */}
             {hoveredId === c.id && (
               <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => handleRefresh(e, c.id)}
-                  className="p-1 rounded hover:bg-white/10 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="p-1 rounded transition-colors text-slate-500 hover:text-cyan-400"
                   title="Refresh"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +114,7 @@ export default function Sidebar({
                 {!c.is_demo && (
                   <button
                     onClick={(e) => handleDelete(e, c.id)}
-                    className="p-1 rounded hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-colors"
+                    className="p-1 rounded transition-colors text-slate-500 hover:text-red-400"
                     title="Delete"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,10 +129,11 @@ export default function Sidebar({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-white/5">
-        <p className="text-xs text-slate-600 text-center">
-          Powered by AI · Mock mode available
-        </p>
+      <div className="p-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <p className="text-xs" style={{ color: "#334155" }}>Auto-refresh · daily · AI-powered</p>
+        </div>
       </div>
     </aside>
   );

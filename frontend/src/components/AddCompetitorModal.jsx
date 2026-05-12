@@ -3,9 +3,9 @@ import { createCompetitor } from "../api";
 
 const EMOJIS = ["🏢", "🚀", "⚡", "🔥", "🌊", "🎯", "💡", "🤖", "🦄", "🌍", "🛸", "💎"];
 const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#ef4444",
-  "#f97316", "#eab308", "#22c55e", "#14b8a6",
-  "#3b82f6", "#06b6d4", "#10a37f", "#c17940",
+  "#06b6d4", "#0ea5e9", "#6366f1", "#8b5cf6",
+  "#ec4899", "#ef4444", "#f97316", "#eab308",
+  "#22c55e", "#10b981", "#10a37f", "#c17940",
 ];
 
 const SUGGESTED_COMPANIES = [
@@ -52,52 +52,25 @@ const SUGGESTED_COMPANIES = [
 ];
 
 export default function AddCompetitorModal({ onClose, onAdded }) {
-  const [mode, setMode] = useState("browse"); // "browse" | "custom"
-  const [form, setForm] = useState({
-    name: "",
-    website_url: "",
-    changelog_url: "",
-    github_repo: "",
-    rss_url: "",
-    description: "",
-    logo_emoji: "🏢",
-    color: "#6366f1",
-  });
+  const [mode, setMode] = useState("browse");
+  const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", logo_emoji: "🏢", color: "#06b6d4" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const prefill = (company) => {
-    setForm({
-      name: company.name,
-      website_url: company.website_url,
-      changelog_url: company.changelog_url || "",
-      github_repo: company.github_repo || "",
-      rss_url: company.rss_url || "",
-      description: company.description || "",
-      logo_emoji: company.logo_emoji,
-      color: company.color,
-    });
+    setForm({ name: company.name, website_url: company.website_url, changelog_url: company.changelog_url || "", github_repo: company.github_repo || "", rss_url: company.rss_url || "", description: company.description || "", logo_emoji: company.logo_emoji, color: company.color });
     setMode("custom");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.website_url.trim()) {
-      setError("Name and website URL are required.");
-      return;
-    }
+    if (!form.name.trim() || !form.website_url.trim()) { setError("Name and website URL are required."); return; }
     setError("");
     setLoading(true);
     try {
-      const payload = {
-        ...form,
-        changelog_url: form.changelog_url || null,
-        github_repo: form.github_repo || null,
-        rss_url: form.rss_url || null,
-        description: form.description || null,
-      };
+      const payload = { ...form, changelog_url: form.changelog_url || null, github_repo: form.github_repo || null, rss_url: form.rss_url || null, description: form.description || null };
       const res = await createCompetitor(payload);
       onAdded(res.data);
     } catch (e) {
@@ -107,31 +80,41 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
     }
   };
 
+  const inputStyle = {
+    width: "100%",
+    background: "#07090f",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "0.5rem",
+    padding: "0.5rem 0.75rem",
+    color: "#e2e8f0",
+    fontSize: "0.875rem",
+    outline: "none",
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1a1a2e] rounded-2xl border border-white/10 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: "rgba(0,0,0,0.75)" }}>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "#0b1018", border: "1px solid rgba(6,182,212,0.15)" }}>
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-white/5">
+        <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold text-slate-100">Add Competitor</h2>
-            <div className="flex bg-white/5 rounded-lg p-0.5">
+            <h2 className="text-base font-semibold text-slate-100">Track Competitor</h2>
+            <div className="flex rounded-lg p-0.5" style={{ background: "rgba(255,255,255,0.04)" }}>
               {["browse", "custom"].map((m) => (
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                    mode === m ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-200"
-                  }`}
+                  className="px-3 py-1 rounded-md text-xs font-medium transition-all"
+                  style={mode === m
+                    ? { background: "rgba(6,182,212,0.2)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }
+                    : { color: "#64748b", border: "1px solid transparent" }
+                  }
                 >
                   {m === "browse" ? "Quick Add" : "Custom"}
                 </button>
               ))}
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-slate-200 transition-colors"
-          >
+          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 transition-colors hover:bg-white/5">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -139,11 +122,10 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
         </div>
 
         {mode === "browse" ? (
-          /* ── Quick Add: suggested companies ── */
           <div className="p-5 space-y-5">
             {SUGGESTED_COMPANIES.map((group) => (
               <div key={group.category}>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#06b6d4" }}>
                   {group.category}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -151,43 +133,41 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                     <button
                       key={company.name}
                       onClick={() => prefill(company)}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 text-left transition-colors group"
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
+                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(6,182,212,0.06)"; e.currentTarget.style.borderColor = "rgba(6,182,212,0.2)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     >
-                      <span
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-                        style={{ backgroundColor: `${company.color}25` }}
-                      >
+                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0" style={{ background: `${company.color}20` }}>
                         {company.logo_emoji}
                       </span>
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-slate-200 truncate">{company.name}</p>
-                        <p className="text-xs text-slate-500 truncate">{company.description}</p>
+                        <p className="text-xs truncate" style={{ color: "#475569" }}>{company.description}</p>
                       </div>
                     </button>
                   ))}
                 </div>
               </div>
             ))}
-            <p className="text-xs text-slate-600 text-center pt-2">
-              Click any company to pre-fill the form, then customise and save.
+            <p className="text-xs text-center pt-1" style={{ color: "#334155" }}>
+              Click any company to pre-fill, then customise and save.
             </p>
           </div>
         ) : (
-          /* ── Custom form ── */
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
-            {/* Emoji + Color picker */}
+            {/* Emoji + Color */}
             <div className="flex gap-4 items-start">
               <div>
                 <label className="block text-xs text-slate-500 mb-2">Icon</label>
                 <div className="flex flex-wrap gap-1.5 w-36">
                   {EMOJIS.map((e) => (
-                    <button
-                      key={e}
-                      type="button"
-                      onClick={() => set("logo_emoji", e)}
-                      className={`w-8 h-8 rounded-lg text-lg flex items-center justify-center transition-colors ${
-                        form.logo_emoji === e ? "bg-white/20 ring-2 ring-indigo-500" : "hover:bg-white/10"
-                      }`}
+                    <button key={e} type="button" onClick={() => set("logo_emoji", e)}
+                      className="w-8 h-8 rounded-lg text-lg flex items-center justify-center transition-all"
+                      style={form.logo_emoji === e
+                        ? { background: "rgba(6,182,212,0.2)", outline: "2px solid rgba(6,182,212,0.5)" }
+                        : {}
+                      }
                     >
                       {e}
                     </button>
@@ -198,21 +178,15 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                 <label className="block text-xs text-slate-500 mb-2">Color</label>
                 <div className="flex flex-wrap gap-1.5">
                   {COLORS.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => set("color", c)}
-                      className={`w-7 h-7 rounded-full transition-transform ${
-                        form.color === c ? "scale-125 ring-2 ring-white" : "hover:scale-110"
-                      }`}
-                      style={{ backgroundColor: c }}
+                    <button key={c} type="button" onClick={() => set("color", c)}
+                      className="w-7 h-7 rounded-full transition-transform"
+                      style={{ backgroundColor: c, transform: form.color === c ? "scale(1.25)" : "scale(1)", outline: form.color === c ? "2px solid rgba(255,255,255,0.5)" : "none", outlineOffset: "1px" }}
                     />
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Fields */}
             {[
               { key: "name", label: "Company Name *", placeholder: "e.g. Stripe", type: "text" },
               { key: "website_url", label: "Website URL *", placeholder: "https://stripe.com", type: "url" },
@@ -222,44 +196,44 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
               { key: "github_repo", label: "GitHub Repo", placeholder: "stripe/stripe-node", type: "text" },
             ].map(({ key, label, placeholder, type }) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">{label}</label>
+                <label className="block text-sm font-medium text-slate-400 mb-1.5">{label}</label>
                 <input
                   type={type}
                   value={form[key]}
                   onChange={(e) => set(key, e.target.value)}
                   placeholder={placeholder}
-                  className="w-full bg-[#0f0f13] border border-white/10 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                  style={inputStyle}
+                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
                 />
               </div>
             ))}
 
             {error && (
-              <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
+              <p className="text-sm rounded-lg px-4 py-2" style={{ color: "#fca5a5", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
                 {error}
               </p>
             )}
 
-            <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setMode("browse")}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 text-sm transition-colors"
+            <div className="flex gap-3 pt-1">
+              <button type="button" onClick={() => setMode("browse")}
+                className="flex-1 px-4 py-2.5 rounded-xl text-sm transition-all"
+                style={{ border: "1px solid rgba(255,255,255,0.08)", color: "#64748b" }}
               >
                 ← Back
               </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium text-sm transition-colors flex items-center justify-center gap-2"
+              <button type="submit" disabled={loading}
+                className="flex-1 px-4 py-2.5 rounded-xl font-medium text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: "rgba(6,182,212,0.15)", color: "#67e8f9", border: "1px solid rgba(6,182,212,0.3)" }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(6,182,212,0.25)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "rgba(6,182,212,0.15)"; }}
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#67e8f9" }} />
                     Adding...
                   </>
-                ) : (
-                  "Add & Fetch Updates"
-                )}
+                ) : "Add & Scan"}
               </button>
             </div>
           </form>

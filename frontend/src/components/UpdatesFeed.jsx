@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 
-const CATEGORY_COLORS = {
-  Feature: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-  Fix: "bg-green-500/20 text-green-300 border-green-500/30",
-  Pricing: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  Integration: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-  Deprecation: "bg-red-500/20 text-red-300 border-red-500/30",
-  Announcement: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
-  Other: "bg-slate-500/20 text-slate-300 border-slate-500/30",
+const CATEGORY_STYLE = {
+  Feature:      { bg: "rgba(14,165,233,0.12)",  text: "#7dd3fc", border: "rgba(14,165,233,0.25)"  },
+  Fix:          { bg: "rgba(16,185,129,0.12)",  text: "#6ee7b7", border: "rgba(16,185,129,0.25)"  },
+  Pricing:      { bg: "rgba(234,179,8,0.12)",   text: "#fde047", border: "rgba(234,179,8,0.25)"   },
+  Integration:  { bg: "rgba(6,182,212,0.12)",   text: "#67e8f9", border: "rgba(6,182,212,0.25)"   },
+  Deprecation:  { bg: "rgba(239,68,68,0.12)",   text: "#fca5a5", border: "rgba(239,68,68,0.25)"   },
+  Announcement: { bg: "rgba(168,85,247,0.12)",  text: "#d8b4fe", border: "rgba(168,85,247,0.25)"  },
+  Other:        { bg: "rgba(100,116,139,0.12)", text: "#94a3b8", border: "rgba(100,116,139,0.25)" },
 };
 
 const IMPACT_CONFIG = {
-  High: { color: "text-red-400", dot: "bg-red-400", label: "High impact" },
-  Medium: { color: "text-yellow-400", dot: "bg-yellow-400", label: "Medium impact" },
-  Low: { color: "text-green-400", dot: "bg-green-400", label: "Low impact" },
+  High:   { color: "#f87171", dot: "#f87171", label: "High" },
+  Medium: { color: "#fbbf24", dot: "#fbbf24", label: "Med"  },
+  Low:    { color: "#34d399", dot: "#34d399", label: "Low"  },
 };
 
 const CATEGORIES = ["Feature", "Fix", "Pricing", "Integration", "Deprecation", "Announcement", "Other"];
@@ -23,7 +23,7 @@ const IMPACTS = ["High", "Medium", "Low"];
 function UpdateCard({ update }) {
   const [expanded, setExpanded] = useState(false);
   const impact = IMPACT_CONFIG[update.impact] || IMPACT_CONFIG.Medium;
-  const catStyle = CATEGORY_COLORS[update.category] || CATEGORY_COLORS.Other;
+  const cat = CATEGORY_STYLE[update.category] || CATEGORY_STYLE.Other;
 
   const timeAgo = update.published_at
     ? formatDistanceToNow(new Date(update.published_at), { addSuffix: true })
@@ -33,64 +33,75 @@ function UpdateCard({ update }) {
 
   return (
     <div
-      className="bg-[#1a1a2e] border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all cursor-pointer"
       onClick={() => setExpanded(!expanded)}
+      className="rounded-xl p-4 cursor-pointer transition-all group"
+      style={{
+        background: "#0f1620",
+        border: `1px solid rgba(255,255,255,0.05)`,
+        borderLeft: `3px solid ${update.competitor_color || "#06b6d4"}`,
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(6,182,212,0.25)`; e.currentTarget.style.borderLeftColor = update.competitor_color || "#06b6d4"; e.currentTarget.style.background = "#121c2c"; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderLeftColor = update.competitor_color || "#06b6d4"; e.currentTarget.style.background = "#0f1620"; }}
     >
       <div className="flex items-start gap-3">
-        {/* Competitor avatar */}
+        {/* Avatar */}
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0 border border-white/5"
-          style={{ backgroundColor: `${update.competitor_color}20` }}
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+          style={{ background: `${update.competitor_color || "#06b6d4"}18`, border: "1px solid rgba(255,255,255,0.06)" }}
         >
           {update.competitor_emoji || "🏢"}
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Top row */}
-          <div className="flex items-center gap-2 flex-wrap mb-1">
+          <div className="flex items-center gap-2 flex-wrap mb-1.5">
             <span className="text-sm font-semibold text-slate-200">{update.competitor_name}</span>
             <span
-              className={`text-xs px-2 py-0.5 rounded-full border font-medium ${catStyle}`}
+              className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ background: cat.bg, color: cat.text, border: `1px solid ${cat.border}` }}
             >
               {update.category}
             </span>
-            <div className="flex items-center gap-1 ml-auto">
-              <span className={`w-1.5 h-1.5 rounded-full ${impact.dot}`} />
-              <span className={`text-xs ${impact.color} hidden sm:inline`}>{impact.label}</span>
+            <div className="flex items-center gap-1.5 ml-auto">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: impact.dot }} />
+              <span className="text-xs font-medium" style={{ color: impact.color }}>{impact.label}</span>
             </div>
           </div>
 
           {/* Title */}
-          <p className="text-sm font-medium text-slate-100 mb-1.5">{update.title}</p>
+          <p className="text-sm font-medium text-slate-100 mb-1.5 leading-snug">{update.title}</p>
 
-          {/* AI Summary */}
+          {/* Summary */}
           {update.ai_summary && (
-            <p className="text-sm text-slate-400 leading-relaxed">{update.ai_summary}</p>
+            <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{update.ai_summary}</p>
           )}
 
-          {/* Expanded: raw content */}
+          {/* Expanded */}
           {expanded && update.content_raw && (
-            <div className="mt-3 pt-3 border-t border-white/5">
-              <p className="text-xs text-slate-500 mb-1 font-medium uppercase tracking-wide">Original text</p>
-              <p className="text-xs text-slate-500 leading-relaxed">{update.content_raw.slice(0, 500)}</p>
+            <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#334155" }}>Source</p>
+              <p className="text-xs leading-relaxed" style={{ color: "#475569" }}>{update.content_raw.slice(0, 500)}</p>
             </div>
           )}
 
           {/* Footer */}
           <div className="flex items-center gap-3 mt-2.5">
-            <span className="text-xs text-slate-600">{timeAgo}</span>
+            <span className="text-xs" style={{ color: "#334155" }}>{timeAgo}</span>
             {update.url && (
               <a
                 href={update.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="text-xs transition-colors"
+                style={{ color: "#06b6d4" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "#67e8f9"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "#06b6d4"; }}
               >
                 View source →
               </a>
             )}
-            <span className="text-xs text-slate-700 ml-auto capitalize">{update.source_type}</span>
+            <span className="text-xs ml-auto capitalize" style={{ color: "#1e293b" }}>{update.source_type}</span>
           </div>
         </div>
       </div>
@@ -102,9 +113,7 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
   const [categoryFilter, setCategoryFilter] = useState("");
   const [impactFilter, setImpactFilter] = useState("");
 
-  const currentComp = selectedCompetitor
-    ? competitors.find((c) => c.id === selectedCompetitor)
-    : null;
+  const currentComp = selectedCompetitor ? competitors.find((c) => c.id === selectedCompetitor) : null;
 
   const filtered = updates.filter((u) => {
     if (categoryFilter && u.category !== categoryFilter) return false;
@@ -112,87 +121,83 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
     return true;
   });
 
-  const stats = {
-    total: updates.length,
-    high: updates.filter((u) => u.impact === "High").length,
-    features: updates.filter((u) => u.category === "Feature").length,
-    pricing: updates.filter((u) => u.category === "Pricing").length,
+  const stats = [
+    { label: "Total", value: updates.length, color: "#e2e8f0" },
+    { label: "High Impact", value: updates.filter((u) => u.impact === "High").length, color: "#f87171" },
+    { label: "Features", value: updates.filter((u) => u.category === "Feature").length, color: "#7dd3fc" },
+    { label: "Pricing", value: updates.filter((u) => u.category === "Pricing").length, color: "#fde047" },
+  ];
+
+  const selectStyle = {
+    background: "#0f1620",
+    border: "1px solid rgba(255,255,255,0.08)",
+    color: "#94a3b8",
+    borderRadius: "0.5rem",
+    padding: "0.375rem 0.75rem",
+    fontSize: "0.875rem",
+    outline: "none",
   };
 
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
-      {/* Stats row */}
+      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        {[
-          { label: "Total Updates", value: stats.total, color: "text-slate-300" },
-          { label: "High Impact", value: stats.high, color: "text-red-400" },
-          { label: "New Features", value: stats.features, color: "text-blue-400" },
-          { label: "Pricing Changes", value: stats.pricing, color: "text-yellow-400" },
-        ].map((s) => (
-          <div key={s.label} className="bg-[#1a1a2e] rounded-xl p-3 border border-white/5">
-            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+        {stats.map((s) => (
+          <div
+            key={s.label}
+            className="rounded-xl p-4"
+            style={{ background: "#0f1620", border: "1px solid rgba(255,255,255,0.05)" }}
+          >
+            <p className="text-2xl font-bold tabular-nums" style={{ color: s.color }}>{s.value}</p>
+            <p className="text-xs mt-1" style={{ color: "#334155" }}>{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-[#1a1a2e] border border-white/10 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500"
-        >
+      <div className="flex flex-wrap gap-2 mb-5 items-center">
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} style={selectStyle}>
           <option value="">All categories</option>
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
+          {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
-        <select
-          value={impactFilter}
-          onChange={(e) => setImpactFilter(e.target.value)}
-          className="bg-[#1a1a2e] border border-white/10 text-slate-300 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500"
-        >
+        <select value={impactFilter} onChange={(e) => setImpactFilter(e.target.value)} style={selectStyle}>
           <option value="">All impact levels</option>
-          {IMPACTS.map((i) => (
-            <option key={i} value={i}>{i}</option>
-          ))}
+          {IMPACTS.map((i) => <option key={i} value={i}>{i}</option>)}
         </select>
         {(categoryFilter || impactFilter) && (
           <button
             onClick={() => { setCategoryFilter(""); setImpactFilter(""); }}
-            className="text-xs text-slate-500 hover:text-slate-300 px-2 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
+            className="text-xs px-2 py-1.5 rounded-lg transition-colors"
+            style={{ color: "#64748b" }}
           >
-            Clear filters
+            Clear ×
           </button>
         )}
-        <span className="ml-auto text-xs text-slate-600 self-center">{filtered.length} updates</span>
+        <span className="ml-auto text-xs tabular-nums" style={{ color: "#334155" }}>{filtered.length} updates</span>
       </div>
 
-      {/* Feed */}
+      {/* Feed or empty state */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-4xl mb-3">
+        <div className="text-center py-20">
+          <div className="text-4xl mb-4">
             {categoryFilter || impactFilter ? "🔎" : currentComp?.update_count === 0 ? "📡" : "📭"}
-          </p>
+          </div>
           {categoryFilter || impactFilter ? (
-            <p className="text-slate-400">No updates match your filters</p>
+            <p style={{ color: "#64748b" }}>No updates match your filters</p>
           ) : currentComp?.update_count === 0 ? (
             <>
-              <p className="text-slate-300 font-medium mb-1">No updates found for {currentComp.name}</p>
-              <p className="text-slate-500 text-sm max-w-xs mx-auto">
-                Try adding an RSS feed URL, GitHub repo, or changelog URL for this competitor, then hit Refresh.
+              <p className="text-slate-300 font-medium mb-1">No feed found for {currentComp.name}</p>
+              <p className="text-sm max-w-xs mx-auto" style={{ color: "#475569" }}>
+                Add an RSS feed URL, GitHub repo, or changelog URL, then hit Refresh.
               </p>
             </>
           ) : (
-            <p className="text-slate-400">No updates yet — click Refresh on a competitor to fetch.</p>
+            <p style={{ color: "#64748b" }}>No updates yet — click Refresh to scan.</p>
           )}
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((update) => (
-            <UpdateCard key={update.id} update={update} />
-          ))}
+        <div className="space-y-2.5">
+          {filtered.map((update) => <UpdateCard key={update.id} update={update} />)}
         </div>
       )}
     </div>
