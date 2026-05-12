@@ -12,7 +12,7 @@ const COLORS = [
   // Orange / Amber / Yellow
   "#f97316", "#fb923c", "#eab308", "#f59e0b",
   // Green / Emerald / Teal
-  "#22c55e", "#10b981", "#14b8a6", "#06b6d4",
+  "#22c55e", "#10b981", "#14b8a6", "#0d9488",
   // Warm neutrals / brand
   "#10a37f", "#c17940", "#64748b", "#ffffff",
 ];
