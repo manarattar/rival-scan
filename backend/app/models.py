@@ -20,7 +20,6 @@ class Competitor(Base):
     changelog_url = Column(String, nullable=True)
     github_repo = Column(String, nullable=True)
     rss_url = Column(String, nullable=True)
-    logo_emoji = Column(String, default="🏢")
     color = Column(String, default="#6366f1")
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=_utcnow)

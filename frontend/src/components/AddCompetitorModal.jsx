@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createCompetitor } from "../api";
+import CompetitorAvatar from "./CompetitorAvatar";
 
-const EMOJIS = ["🏢", "🚀", "⚡", "🔥", "🌊", "🎯", "💡", "🤖", "🦄", "🌍", "🛸", "💎"];
 const COLORS = [
   // Cyan / Sky / Blue
   "#059669", "#10b981", "#3b82f6", "#1d4ed8",
@@ -21,55 +21,55 @@ const SUGGESTED_COMPANIES = [
   {
     category: "AI Labs",
     items: [
-      { name: "OpenAI", website_url: "https://openai.com", changelog_url: "https://platform.openai.com/docs/changelog", rss_url: null, github_repo: null, logo_emoji: "🤖", color: "#10a37f", description: "GPT-4, DALL-E, Whisper" },
-      { name: "Anthropic", website_url: "https://anthropic.com", changelog_url: "https://docs.anthropic.com/en/release-notes/api", rss_url: null, github_repo: null, logo_emoji: "⚡", color: "#c17940", description: "Claude model family" },
-      { name: "Mistral AI", website_url: "https://mistral.ai", changelog_url: null, rss_url: null, github_repo: "mistralai/mistral-src", logo_emoji: "🌊", color: "#ff7000", description: "Open + efficient LLMs" },
-      { name: "Cohere", website_url: "https://cohere.com", changelog_url: null, rss_url: null, github_repo: "cohere-ai/cohere-python", logo_emoji: "🔷", color: "#39594d", description: "Enterprise NLP APIs" },
-      { name: "Google DeepMind", website_url: "https://deepmind.google", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🧠", color: "#4285f4", description: "Gemini, AlphaCode, Imagen" },
+      { name: "OpenAI", website_url: "https://openai.com", changelog_url: "https://platform.openai.com/docs/changelog", rss_url: null, github_repo: null, color: "#10a37f", description: "GPT-4, DALL-E, Whisper" },
+      { name: "Anthropic", website_url: "https://anthropic.com", changelog_url: "https://docs.anthropic.com/en/release-notes/api", rss_url: null, github_repo: null, color: "#c17940", description: "Claude model family" },
+      { name: "Mistral AI", website_url: "https://mistral.ai", changelog_url: null, rss_url: null, github_repo: "mistralai/mistral-src", color: "#ff7000", description: "Open + efficient LLMs" },
+      { name: "Cohere", website_url: "https://cohere.com", changelog_url: null, rss_url: null, github_repo: "cohere-ai/cohere-python", color: "#39594d", description: "Enterprise NLP APIs" },
+      { name: "Google DeepMind", website_url: "https://deepmind.google", changelog_url: null, rss_url: null, github_repo: null, color: "#4285f4", description: "Gemini, AlphaCode, Imagen" },
     ],
   },
   {
     category: "AI Inference & Tools",
     items: [
-      { name: "Groq", website_url: "https://groq.com", changelog_url: null, rss_url: null, github_repo: "groq/groq-python", logo_emoji: "⚡", color: "#f43f5e", description: "Ultra-fast LPU inference" },
-      { name: "Together AI", website_url: "https://www.together.ai", changelog_url: null, rss_url: null, github_repo: "togethercomputer/together-python", logo_emoji: "🤝", color: "#7c3aed", description: "Open-source model hosting" },
-      { name: "Replicate", website_url: "https://replicate.com", changelog_url: null, rss_url: null, github_repo: "replicate/replicate-python", logo_emoji: "🔁", color: "#10b981", description: "Run ML models via API" },
-      { name: "Hugging Face", website_url: "https://huggingface.co", changelog_url: null, rss_url: "https://huggingface.co/blog/feed.xml", github_repo: "huggingface/transformers", logo_emoji: "🤗", color: "#ffd21e", description: "500k+ open-source models" },
-      { name: "Perplexity", website_url: "https://www.perplexity.ai", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🔍", color: "#20b2aa", description: "AI-powered search & answers" },
+      { name: "Groq", website_url: "https://groq.com", changelog_url: null, rss_url: null, github_repo: "groq/groq-python", color: "#f43f5e", description: "Ultra-fast LPU inference" },
+      { name: "Together AI", website_url: "https://www.together.ai", changelog_url: null, rss_url: null, github_repo: "togethercomputer/together-python", color: "#7c3aed", description: "Open-source model hosting" },
+      { name: "Replicate", website_url: "https://replicate.com", changelog_url: null, rss_url: null, github_repo: "replicate/replicate-python", color: "#10b981", description: "Run ML models via API" },
+      { name: "Hugging Face", website_url: "https://huggingface.co", changelog_url: null, rss_url: "https://huggingface.co/blog/feed.xml", github_repo: "huggingface/transformers", color: "#ffd21e", description: "500k+ open-source models" },
+      { name: "Perplexity", website_url: "https://www.perplexity.ai", changelog_url: null, rss_url: null, github_repo: null, color: "#20b2aa", description: "AI-powered search & answers" },
     ],
   },
   {
     category: "Dev Tools & Cloud",
     items: [
-      { name: "Vercel", website_url: "https://vercel.com", changelog_url: "https://vercel.com/changelog", rss_url: null, github_repo: null, logo_emoji: "▲", color: "#ffffff", description: "Frontend cloud & AI SDK" },
-      { name: "Supabase", website_url: "https://supabase.com", changelog_url: null, rss_url: null, github_repo: "supabase/supabase", logo_emoji: "🔋", color: "#3ecf8e", description: "Open-source Firebase alternative" },
-      { name: "Railway", website_url: "https://railway.app", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🚂", color: "#7000ff", description: "Deploy anything instantly" },
-      { name: "GitHub", website_url: "https://github.com", changelog_url: "https://github.blog/changelog/", rss_url: null, github_repo: null, logo_emoji: "🐙", color: "#6e40c9", description: "Code hosting + Copilot" },
-      { name: "Stripe", website_url: "https://stripe.com", changelog_url: "https://stripe.com/docs/upgrades", rss_url: null, github_repo: "stripe/stripe-python", logo_emoji: "💳", color: "#635bff", description: "Payments infrastructure" },
+      { name: "Vercel", website_url: "https://vercel.com", changelog_url: "https://vercel.com/changelog", rss_url: null, github_repo: null, color: "#ffffff", description: "Frontend cloud & AI SDK" },
+      { name: "Supabase", website_url: "https://supabase.com", changelog_url: null, rss_url: null, github_repo: "supabase/supabase", color: "#3ecf8e", description: "Open-source Firebase alternative" },
+      { name: "Railway", website_url: "https://railway.app", changelog_url: null, rss_url: null, github_repo: null, color: "#7000ff", description: "Deploy anything instantly" },
+      { name: "GitHub", website_url: "https://github.com", changelog_url: "https://github.blog/changelog/", rss_url: null, github_repo: null, color: "#6e40c9", description: "Code hosting + Copilot" },
+      { name: "Stripe", website_url: "https://stripe.com", changelog_url: "https://stripe.com/docs/upgrades", rss_url: null, github_repo: "stripe/stripe-python", color: "#635bff", description: "Payments infrastructure" },
     ],
   },
   {
     category: "Productivity & PM",
     items: [
-      { name: "Linear", website_url: "https://linear.app", changelog_url: "https://linear.app/changelog", rss_url: null, github_repo: null, logo_emoji: "📐", color: "#5e6ad2", description: "Issue tracking for software teams" },
-      { name: "Notion", website_url: "https://notion.so", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "📝", color: "#ffffff", description: "All-in-one workspace" },
-      { name: "Figma", website_url: "https://figma.com", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🎨", color: "#f24e1e", description: "Collaborative design tool" },
-      { name: "Slack", website_url: "https://slack.com", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "💬", color: "#4a154b", description: "Team messaging platform" },
-      { name: "Airtable", website_url: "https://airtable.com", changelog_url: null, rss_url: null, github_repo: null, logo_emoji: "🗃️", color: "#2d7ff9", description: "Low-code database platform" },
+      { name: "Linear", website_url: "https://linear.app", changelog_url: "https://linear.app/changelog", rss_url: null, github_repo: null, color: "#5e6ad2", description: "Issue tracking for software teams" },
+      { name: "Notion", website_url: "https://notion.so", changelog_url: null, rss_url: null, github_repo: null, color: "#ffffff", description: "All-in-one workspace" },
+      { name: "Figma", website_url: "https://figma.com", changelog_url: null, rss_url: null, github_repo: null, color: "#f24e1e", description: "Collaborative design tool" },
+      { name: "Slack", website_url: "https://slack.com", changelog_url: null, rss_url: null, github_repo: null, color: "#4a154b", description: "Team messaging platform" },
+      { name: "Airtable", website_url: "https://airtable.com", changelog_url: null, rss_url: null, github_repo: null, color: "#2d7ff9", description: "Low-code database platform" },
     ],
   },
 ];
 
 export default function AddCompetitorModal({ onClose, onAdded }) {
   const [mode, setMode] = useState("browse");
-  const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", logo_emoji: "🏢", color: "#059669" });
+  const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", color: "#059669" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const prefill = (company) => {
-    setForm({ name: company.name, website_url: company.website_url, changelog_url: company.changelog_url || "", github_repo: company.github_repo || "", rss_url: company.rss_url || "", description: company.description || "", logo_emoji: company.logo_emoji, color: company.color });
+    setForm({ name: company.name, website_url: company.website_url, changelog_url: company.changelog_url || "", github_repo: company.github_repo || "", rss_url: company.rss_url || "", description: company.description || "", color: company.color });
     setMode("custom");
   };
 
@@ -147,9 +147,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
                       onMouseEnter={e => { e.currentTarget.style.background = "rgba(5,150,105,0.06)"; e.currentTarget.style.borderColor = "rgba(5,150,105,0.2)"; }}
                       onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
                     >
-                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0" style={{ background: `${company.color}20` }}>
-                        {company.logo_emoji}
-                      </span>
+                      <CompetitorAvatar name={company.name} color={company.color} size={32} />
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-slate-200 truncate">{company.name}</p>
                         <p className="text-xs truncate" style={{ color: "#475569" }}>{company.description}</p>
@@ -165,24 +163,8 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
-            {/* Emoji + Color */}
+            {/* Brand colour -- the avatar is a monogram of the name */}
             <div className="flex gap-4 items-start">
-              <div>
-                <label className="block text-xs text-slate-500 mb-2">Icon</label>
-                <div className="flex flex-wrap gap-1.5 w-36">
-                  {EMOJIS.map((e) => (
-                    <button key={e} type="button" onClick={() => set("logo_emoji", e)}
-                      className="w-8 h-8 rounded-lg text-lg flex items-center justify-center transition-all"
-                      style={form.logo_emoji === e
-                        ? { background: "rgba(5,150,105,0.2)", outline: "2px solid rgba(5,150,105,0.5)" }
-                        : {}
-                      }
-                    >
-                      {e}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <div className="flex-1">
                 <label className="block text-xs text-slate-500 mb-2">Color</label>
                 <div className="flex flex-wrap gap-1.5">

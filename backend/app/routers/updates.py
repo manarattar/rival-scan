@@ -16,7 +16,6 @@ def _enrich_update(update: Update, db: Session) -> UpdateResponse:
     if comp:
         data.competitor_name = comp.name
         data.competitor_color = comp.color
-        data.competitor_emoji = comp.logo_emoji
     return data
 
 

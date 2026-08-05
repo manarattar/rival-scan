@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { runGapAnalysis } from "../api";
+import CompetitorAvatar from "./CompetitorAvatar";
 
 const URGENCY_CONFIG = {
   High:   { bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)",   badge: { bg: "rgba(239,68,68,0.15)",  color: "#fca5a5" }, dot: "#f87171" },
@@ -101,7 +102,7 @@ export default function GapAnalysis({ competitors }) {
                   : { background: "rgba(255,255,255,0.04)", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.08)" }
                 }
               >
-                <span>{c.logo_emoji}</span>
+                <CompetitorAvatar name={c.name} color={c.color} size={18} />
                 <span>{c.name}</span>
               </button>
             ))}
@@ -152,7 +153,7 @@ export default function GapAnalysis({ competitors }) {
           {result.top_threats?.length > 0 && (
             <div style={{ ...cardStyle, background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.15)" }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#f87171" }}>
-                ⚡ Top Threats
+                Top Threats
               </p>
               <ul className="space-y-2">
                 {result.top_threats.map((t, i) => (

@@ -10,7 +10,6 @@ class CompetitorCreate(BaseModel):
     changelog_url: Optional[str] = None
     github_repo: Optional[str] = None
     rss_url: Optional[str] = None
-    logo_emoji: Optional[str] = "🏢"
     color: Optional[str] = "#6366f1"
     description: Optional[str] = None
 
@@ -42,7 +41,6 @@ class CompetitorResponse(BaseModel):
     changelog_url: Optional[str] = None
     github_repo: Optional[str] = None
     rss_url: Optional[str] = None
-    logo_emoji: str
     color: str
     description: Optional[str] = None
     created_at: datetime
@@ -60,7 +58,6 @@ class UpdateResponse(BaseModel):
     competitor_id: int
     competitor_name: Optional[str] = None
     competitor_color: Optional[str] = None
-    competitor_emoji: Optional[str] = None
     title: str
     content_raw: Optional[str] = None
     url: Optional[str] = None

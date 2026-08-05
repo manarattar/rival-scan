@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
+import CompetitorAvatar from "./CompetitorAvatar";
+import Icon from "./Icon";
 
 const CATEGORY_STYLE = {
   Feature:      { bg: "rgba(14,165,233,0.12)",  text: "#7dd3fc", border: "rgba(14,165,233,0.25)"  },
@@ -45,12 +47,11 @@ function UpdateCard({ update }) {
     >
       <div className="flex items-start gap-3">
         {/* Avatar */}
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-          style={{ background: `${update.competitor_color || "#059669"}18`, border: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          {update.competitor_emoji || "🏢"}
-        </div>
+        <CompetitorAvatar
+          name={update.competitor_name}
+          color={update.competitor_color || "#059669"}
+          size={36}
+        />
 
         <div className="flex-1 min-w-0">
           {/* Top row */}
@@ -179,8 +180,11 @@ export default function UpdatesFeed({ updates, competitors, selectedCompetitor, 
       {/* Feed or empty state */}
       {filtered.length === 0 ? (
         <div className="text-center py-20">
-          <div className="text-4xl mb-4">
-            {categoryFilter || impactFilter ? "🔎" : currentComp?.update_count === 0 ? "📡" : "📭"}
+          <div className="mb-4 flex justify-center" style={{ color: "#475569" }}>
+            <Icon
+              name={categoryFilter || impactFilter ? "search" : "broadcast"}
+              size={36}
+            />
           </div>
           {categoryFilter || impactFilter ? (
             <p style={{ color: "#64748b" }}>No updates match your filters</p>

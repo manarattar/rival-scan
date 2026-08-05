@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { deleteCompetitor, refreshCompetitor } from "../api";
+import CompetitorAvatar from "./CompetitorAvatar";
+import Icon from "./Icon";
 
 const STATUS_COLOR = {
   ok: "bg-emerald-500",
@@ -58,7 +60,7 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
             : { color: "#94a3b8", border: "1px solid transparent" }
           }
         >
-          <span className="text-base">📡</span>
+          <Icon name="broadcast" size={15} />
           <span className="font-medium">All Updates</span>
         </button>
       </div>
@@ -83,7 +85,7 @@ export default function Sidebar({ competitors, selected, onSelect, onAdd, onRefr
             {/* Color stripe */}
             <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full" style={{ backgroundColor: c.color }} />
 
-            <span className="text-xl ml-1">{c.logo_emoji}</span>
+            <CompetitorAvatar name={c.name} color={c.color} size={26} className="ml-1" />
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">

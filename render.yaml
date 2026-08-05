@@ -15,10 +15,15 @@ services:
         value: llama-3.3-70b
       - key: MOCK_MODE
         value: false
-    disk:
-      name: rival-scan-data
-      mountPath: /app/data
-      sizeGB: 1
+      # Managed Postgres connection string (e.g. Neon). Without it the app
+      # falls back to SQLite, which does not survive a restart on this plan.
+      - key: DATABASE_URL
+        sync: false
+    # NOTE: no `disk:` here on purpose. Render's free plan does not support
+    # persistent disks, and the previous mountPath (/app/data) never matched
+    # the SQLite path anyway -- rootDir is `backend`, so the database resolved
+    # to backend/data/rivalscan.db on the ephemeral filesystem. Use
+    # DATABASE_URL above for persistence instead.
 
   - type: web
     name: rival-scan-frontend
