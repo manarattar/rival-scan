@@ -1,3 +1,4 @@
+import useDialogFocus from "./useDialogFocus";
 import { useState } from "react";
 import { createCompetitor } from "../api";
 import CompetitorAvatar from "./CompetitorAvatar";
@@ -61,6 +62,7 @@ const SUGGESTED_COMPANIES = [
 ];
 
 export default function AddCompetitorModal({ onClose, onAdded }) {
+  const dialog = useDialogFocus(onClose);
   const [mode, setMode] = useState("browse");
   const [form, setForm] = useState({ name: "", website_url: "", changelog_url: "", github_repo: "", rss_url: "", description: "", color: "#059669" });
   const [loading, setLoading] = useState(false);
@@ -91,31 +93,31 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
 
   const inputStyle = {
     width: "100%",
-    background: "#080f0a",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "0.5rem",
+    background: "var(--page)",
+    border: "1px solid var(--rule)",
+    borderRadius: "4px",
     padding: "0.5rem 0.75rem",
-    color: "#e2e8f0",
+    color: "var(--ink)",
     fontSize: "0.875rem",
-    outline: "none",
+    
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: "rgba(0,0,0,0.75)" }}>
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "#0c1510", border: "1px solid rgba(5,150,105,0.15)" }}>
+    <div className="modal-overlay" style={{ background: "var(--scrim)" }}>
+      <div ref={dialog} role="dialog" aria-modal="true" aria-labelledby="add-title" className="modal-sheet" style={{ background: "var(--sheet)", border: "1px solid var(--accent-soft)" }}>
         {/* Header */}
-        <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="flex items-center gap-3">
-            <h2 className="text-base font-semibold text-slate-100">Track Competitor</h2>
-            <div className="flex rounded-lg p-0.5" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid var(--rule)" }}>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="add-title" className="text-base font-semibold text-ink">Track Competitor</h2>
+            <div className="flex rounded p-0.5" style={{ background: "var(--rule)" }}>
               {["browse", "custom"].map((m) => (
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className="px-3 py-1 rounded-md text-xs font-medium transition-all"
+                  className="px-3 py-1 rounded text-xs font-medium transition-all"
                   style={mode === m
-                    ? { background: "rgba(5,150,105,0.2)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }
-                    : { color: "#64748b", border: "1px solid transparent" }
+                    ? { background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-soft)" }
+                    : { color: "var(--muted)", border: "1px solid transparent" }
                   }
                 >
                   {m === "browse" ? "Quick Add" : "Custom"}
@@ -123,7 +125,7 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
               ))}
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 transition-colors hover:bg-white/5">
+          <button aria-label="Close add competitor" onClick={onClose} className="p-1.5 rounded text-muted hover:text-ink transition-colors hover:bg-white/5">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -134,30 +136,28 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
           <div className="p-5 space-y-5">
             {SUGGESTED_COMPANIES.map((group) => (
               <div key={group.category}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#059669" }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--accent)" }}>
                   {group.category}
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {group.items.map((company) => (
                     <button
                       key={company.name}
                       onClick={() => prefill(company)}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all"
-                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(5,150,105,0.06)"; e.currentTarget.style.borderColor = "rgba(5,150,105,0.2)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded text-left transition-all"
+                      style={{ background: "var(--rule)", border: "1px solid var(--rule)" }}
                     >
                       <CompetitorAvatar name={company.name} color={company.color} size={32} />
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-200 truncate">{company.name}</p>
-                        <p className="text-xs truncate" style={{ color: "#475569" }}>{company.description}</p>
+                        <p className="text-sm font-medium text-ink truncate">{company.name}</p>
+                        <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{company.description}</p>
                       </div>
                     </button>
                   ))}
                 </div>
               </div>
             ))}
-            <p className="text-xs text-center pt-1" style={{ color: "#334155" }}>
+            <p className="text-xs text-center pt-1" style={{ color: "var(--muted)" }}>
               Click any company to pre-fill, then customise and save.
             </p>
           </div>
@@ -166,12 +166,12 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
             {/* Brand colour -- the avatar is a monogram of the name */}
             <div className="flex gap-4 items-start">
               <div className="flex-1">
-                <label className="block text-xs text-slate-500 mb-2">Color</label>
+                <label className="block text-xs text-muted mb-2">Color</label>
                 <div className="flex flex-wrap gap-1.5">
                   {COLORS.map((c) => (
                     <button key={c} type="button" onClick={() => set("color", c)}
-                      className="w-7 h-7 rounded-full transition-transform"
-                      style={{ backgroundColor: c, transform: form.color === c ? "scale(1.25)" : "scale(1)", outline: form.color === c ? "2px solid rgba(255,255,255,0.5)" : "none", outlineOffset: "1px" }}
+                      aria-label={`Colour ${c}`} aria-pressed={form.color === c} className="w-9 h-9 rounded border border-rule transition-transform"
+                      style={{ backgroundColor: c, transform: form.color === c ? "scale(1)" : "scale(1)", outline: form.color === c ? "2px solid var(--ink)" : "none", outlineOffset: "1px" }}
                     />
                   ))}
                 </div>
@@ -187,41 +187,37 @@ export default function AddCompetitorModal({ onClose, onAdded }) {
               { key: "github_repo", label: "GitHub Repo", placeholder: "stripe/stripe-node", type: "text" },
             ].map(({ key, label, placeholder, type }) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-slate-400 mb-1.5">{label}</label>
+                <label htmlFor={`add-${key}`} className="block text-sm font-medium text-muted mb-1.5">{label}</label>
                 <input
-                  type={type}
+                  id={`add-${key}`} type={type}
                   value={form[key]}
                   onChange={(e) => set(key, e.target.value)}
                   placeholder={placeholder}
                   style={inputStyle}
-                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(5,150,105,0.4)"; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
                 />
               </div>
             ))}
 
             {error && (
-              <p className="text-sm rounded-lg px-4 py-2" style={{ color: "#fca5a5", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
+              <p className="text-sm rounded px-4 py-2" style={{ color: "var(--high)", background: "var(--high-soft)", border: "1px solid var(--high)" }}>
                 {error}
               </p>
             )}
 
             <div className="flex gap-3 pt-1">
               <button type="button" onClick={() => setMode("browse")}
-                className="flex-1 px-4 py-2.5 rounded-xl text-sm transition-all"
-                style={{ border: "1px solid rgba(255,255,255,0.08)", color: "#64748b" }}
+                className="flex-1 px-4 py-2.5 rounded text-sm transition-all"
+                style={{ border: "1px solid var(--rule)", color: "var(--muted)" }}
               >
                 ← Back
               </button>
               <button type="submit" disabled={loading}
-                className="flex-1 px-4 py-2.5 rounded-xl font-medium text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ background: "rgba(5,150,105,0.15)", color: "#34d399", border: "1px solid rgba(5,150,105,0.3)" }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = "rgba(5,150,105,0.25)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(5,150,105,0.15)"; }}
+                className="flex-1 px-4 py-2.5 rounded font-medium text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: "var(--accent-soft)", color: "var(--accent)", border: "1px solid var(--accent-soft)" }}
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "#34d399" }} />
+                    <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: "rgba(103,232,249,0.2)", borderTopColor: "var(--accent)" }} />
                     Adding...
                   </>
                 ) : "Add & Scan"}
