@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import UpdatesFeed from "./components/UpdatesFeed";
 import GapAnalysis from "./components/GapAnalysis";
 import AddCompetitorModal from "./components/AddCompetitorModal";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 
 import Onboarding, { hasSeenTour } from "./components/Onboarding";
 const TOUR_KEY = "rivalscan.onboarded.v1";
@@ -90,6 +91,7 @@ export default function App() {
             ))}
           </nav>
           <button className="button hidden lg:block" onClick={() => setTour(true)}>How it works</button>
+          <ThemeToggle />
         </header>
         <main className="main-content">
           {error && <div role="alert" className="error-banner"><span>{error}</span><button className="button" onClick={fetchAll}>Retry</button></div>}
